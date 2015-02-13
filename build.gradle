@@ -1,0 +1,21 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+compileJava {
+    options.bootClasspath = "/opt/android-sdk/platforms/android-21/android.jar:/opt/dalvik-sdk/rt/lib/ext/compat-1.0.0.jar:/tmp/invoke.jar"
+}
+
+
+dependencies {
+    compile 'javax.inject:javax.inject:1'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+task wrapper(type:Wrapper) {
+    gradleVersion = "2.2"
+}
