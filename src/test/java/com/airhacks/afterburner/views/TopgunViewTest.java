@@ -24,6 +24,7 @@ import com.airhacks.afterburner.topgun.TopgunPresenter;
 import com.airhacks.afterburner.topgun.TopgunView;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import javafx.scene.Parent;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.After;
@@ -111,12 +112,47 @@ public class TopgunViewTest {
     }
 
     @Test
-    public void perViewInjection() {
-        Date actual = new Date();
-        TopgunView v = new TopgunView(d -> actual);
-        TopgunPresenter p = (TopgunPresenter) v.getPresenter();
-        Date injected = p.getDate();
-        assertThat(injected, is(actual));
+    public void perViewObjectInjection() {
+        Date firstDate = new Date();
+        TopgunView first = new TopgunView(getInjectionContext("date", firstDate));
+        TopgunPresenter firstPresenter = (TopgunPresenter) first.getPresenter();
+        Date injected = firstPresenter.getDate();
+        assertThat(injected, is(firstDate));
+
+        Date secondDate = new Date();
+        TopgunView second = new TopgunView(getInjectionContext("date", secondDate));
+        TopgunPresenter secondPresenter = (TopgunPresenter) second.getPresenter();
+        injected = secondPresenter.getDate();
+        assertThat(injected, is(secondDate));
+    }
+
+    @Test
+    public void perViewPrimitiveInjection() {
+        int firstExpected = 21;
+        TopgunView first = new TopgunView(getInjectionContext("damage", firstExpected));
+        TopgunPresenter firstPresenter = (TopgunPresenter) first.getPresenter();
+        int actual = firstPresenter.getDamage();
+        assertThat(actual, is(firstExpected));
+
+        int secondExpected = 42;
+        TopgunView second = new TopgunView(getInjectionContext("damage", secondExpected));
+        TopgunPresenter secondPresenter = (TopgunPresenter) second.getPresenter();
+        actual = secondPresenter.getDamage();
+        assertThat(actual, is(secondExpected));
+
+    }
+
+    Function<String, Object> getInjectionContext(String fieldName, Object value) {
+        return new Function<String, Object>() {
+
+            @Override
+            public Object apply(String key) {
+                if (fieldName.equalsIgnoreCase(key)) {
+                    return value;
+                }
+                return null;
+            }
+        };
     }
 
     @After
