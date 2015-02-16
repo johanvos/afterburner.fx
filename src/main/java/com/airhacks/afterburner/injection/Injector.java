@@ -109,7 +109,9 @@ public class Injector {
         Object product = modelsAndServices.get(clazz);
         if (product == null) {
             product = injectAndInitialize(instanceSupplier.apply(clazz));
-            modelsAndServices.putIfAbsent(clazz, product);
+            if  (modelsAndServices.get(clazz) == null) {
+                modelsAndServices.put(clazz, product);
+            }
         }
         return clazz.cast(product);
     }
