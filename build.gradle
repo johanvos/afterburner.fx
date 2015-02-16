@@ -1,19 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'maven'
+
+group = 'com.airhacks'
+version = '1.6.2-SNAPSHOT'
 
 repositories {
     mavenCentral()
     jcenter()
 }
 
-compileJava {
-    options.bootClasspath = "/opt/android-sdk/platforms/android-21/android.jar:/opt/dalvik-sdk/rt/lib/ext/compat-1.0.0.jar:/tmp/invoke.jar"
-}
-
-
 dependencies {
     compile 'javax.inject:javax.inject:1'
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+compileJava {
+    options.bootClasspath = "/opt/android-sdk/platforms/android-21/android.jar:/opt/dalvik-sdk/rt/lib/ext/compat-1.0.0.jar:/opt/invoke.jar"
 }
 
 task wrapper(type:Wrapper) {
